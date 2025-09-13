@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    margin: 0;
+  }
+  
+  header nav {
+    background: #222;
+    padding: 10px;
+  }
+  header nav a {
+    color: #fff;
+    margin-right: 15px;
+    text-decoration: none;
+  }
+  
+  .slider {
+    display: flex;
+    overflow: hidden;
+    width: 80%;
+    margin: auto;
+  }
+  .slide {
+    flex: 0 0 100%;
+    text-align: center;
+  }
+  .slide img {
+    width: 60%;
+    border-radius: 10px;
+  }
+  
