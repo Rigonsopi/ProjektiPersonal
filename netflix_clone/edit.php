@@ -1,11 +1,18 @@
 <?php include 'config.php'; include 'header.php'; ?>
+
 <?php
-if(!isset($_GET['id'])) die("Movie ID missing");
+if (!isset($_GET['id'])) {
+    die("Movie ID missing");
+}
+
 $id = (int)$_GET['id'];
 $stmt = $pdo->prepare("SELECT * FROM movies WHERE id=?");
 $stmt->execute([$id]);
 $movie = $stmt->fetch();
-if(!$movie) die("Movie not found");
+
+if (!$movie) {
+    die("Movie not found");
+}
 ?>
 
 <h2>Edit Movie</h2>

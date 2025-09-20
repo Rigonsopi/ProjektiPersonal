@@ -1,6 +1,9 @@
 <?php include 'config.php'; include 'header.php'; ?>
+
 <?php
-require 'config.php'; 
+if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
+    die("Access denied!");
+}
 
 if(isset($_POST['add_movie'])) {
     $title = $_POST['title'];
@@ -9,7 +12,6 @@ if(isset($_POST['add_movie'])) {
     $description = $_POST['description'];
     $thumbnail = $_POST['thumbnail'];
 
-   
     $stmt = $pdo->prepare("INSERT INTO movies (title, genre, year, description, thumbnail) VALUES (:title, :genre, :year, :description, :thumbnail)");
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':genre', $genre);
@@ -23,24 +25,20 @@ if(isset($_POST['add_movie'])) {
         echo "<p style='color:red'>Error adding movie!</p>";
     }
 }
-if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
-    die("Access denied!");
-}
 ?>
 
 <h2>Dashboard</h2>
 
-<form method="post" action="signup.php">
+<form method="post" action="dashboard.php">
   <h3>Add Movie</h3>
   <label>Title: <input type="text" name="title" required></label><br>
   <label>Genre: <input type="text" name="genre" required></label><br>
   <label>Year: <input type="number" name="year" required></label><br>
   <label>Description: <textarea name="description"></textarea></label><br>
   <label>Thumbnail URL: <input type="text" name="thumbnail"></label><br>
-  <button type="submit" name="addMovie">Add Movie</button>
+  <button type="submit" name="add_movie">Add Movie</button>
 </form>
 
-<hr>
 
 <h2>Add New Movies</h2>
 <form action="dashboard.php" method="post">
@@ -230,7 +228,7 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
   <input type="submit" name="add movie" value="Add Movie">
 </form>
 
-
+                                                                                                
 <h2>Add New Movies</h2>
 <form action="dashboard.php" method="post">
   <label>Title:The Social Dilemma</label><br>
@@ -251,6 +249,8 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
   <input type="submit" name="add movie" value="Add Movie">
 </form>
 
+
+<hr>
 
 <h3>Movie List</h3>
 <table border="1">

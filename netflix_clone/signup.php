@@ -1,7 +1,10 @@
-<?php include 'config.php';
-if($_SERVER['REQUEST_METHOD']==='POST') {
-    $hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO users (username,password_hash,is_admin) VALUES (?,?,0)");
-    $stmt->execute([$_POST['username'], $hash]);
-    header("Location: signin.php");
-}
+<?php include 'config.php'; include 'header.php'; ?>
+
+<h2>Register</h2>
+<form method="post" action="signup.php">
+  <label>Username: <input type="text" name="username" required></label><br>
+  <label>Password: <input type="password" name="password" required></label><br>
+  <button type="submit">Register</button>
+</form>
+
+<?php include 'footer.php'; ?>

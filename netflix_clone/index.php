@@ -9,7 +9,7 @@ foreach ($stmt as $movie): ?>
   <div class="slide">
     <img src="<?= htmlspecialchars($movie['thumbnail']) ?>" alt="<?= htmlspecialchars($movie['title']) ?>">
     <h3><?= htmlspecialchars($movie['title']) ?></h3>
-    <p><?= substr($movie['description'],0,100) ?>...</p>
+    <p><?= substr($movie['description'], 0, 100) ?>...</p>
   </div>
 <?php endforeach; ?>
 </div>

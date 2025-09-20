@@ -9,8 +9,8 @@
 <header>
   <nav>
     <a href="index.php">Home</a>
-    <?php if(isset($_SESSION['user'])): ?>
-      <?php if($_SESSION['user']['is_admin'] == 1): ?>
+    <?php if (isset($_SESSION['user'])): ?>
+      <?php if ($_SESSION['user']['is_admin'] == 1): ?>
         <a href="dashboard.php">Dashboard</a>
       <?php endif; ?>
       <a href="logout.php">Logout</a>

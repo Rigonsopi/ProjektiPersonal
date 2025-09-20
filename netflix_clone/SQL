@@ -19,7 +19,5 @@ CREATE TABLE movies (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- shto një admin manualisht
 INSERT INTO users (username, password_hash, is_admin) 
 VALUES ('admin', '$2y$10$kXcZa3nDnFvFhRkZAdn.1eD4tAGoC4IvAp86UlLZk.4P/1VRn6hny', 1);
--- password = admin123
