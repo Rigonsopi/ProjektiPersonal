@@ -1,6 +1,6 @@
 <?php include 'config.php'; include 'header.php'; ?>
 <?php
-require 'config.php'; // lidhja me databazën
+require 'config.php'; 
 
 if(isset($_POST['add_movie'])) {
     $title = $_POST['title'];
@@ -9,7 +9,6 @@ if(isset($_POST['add_movie'])) {
     $description = $_POST['description'];
     $thumbnail = $_POST['thumbnail'];
 
-    // PDO prepare statement për siguri
     $stmt = $pdo->prepare("INSERT INTO movies (title, genre, year, description, thumbnail) VALUES (:title, :genre, :year, :description, :thumbnail)");
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':genre', $genre);
@@ -28,37 +27,175 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
 }
 ?>
 
-<h2>Dashboard</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<form method="post" action="signup.php">
-  <h3>Add Movie</h3>
-  <label>Title: <input type="text" name="title" required></label><br>
-  <label>Genre: <input type="text" name="genre" required></label><br>
-  <label>Year: <input type="number" name="year" required></label><br>
-  <label>Description: <textarea name="description"></textarea></label><br>
-  <label>Thumbnail URL: <input type="text" name="thumbnail"></label><br>
-  <button type="submit" name="addMovie">Add Movie</button>
-</form>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+        }
 
-<hr>
+        /* Navbar */
+        .navbar {
+            background: #000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e50914;
+        }
 
-<h3>Movie List</h3>
-<table border="1">
-<tr><th>ID</th><th>Title</th><th>Genre</th><th>Year</th><th>Actions</th></tr>
-<?php
-$stmt = $pdo->query("SELECT * FROM movies ORDER BY id DESC");
-foreach ($stmt as $row): ?>
-<tr>
-  <td><?= $row['id'] ?></td>
-  <td><?= htmlspecialchars($row['title']) ?></td>
-  <td><?= htmlspecialchars($row['genre']) ?></td>
-  <td><?= $row['year'] ?></td>
-  <td>
-    <a href="edit.php?id=<?= $row['id'] ?>">Edit</a> |
-    <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Delete this movie?')">Delete</a>
-  </td>
-</tr>
-<?php endforeach; ?>
-</table>
+        .navbar .welcome-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .navbar .logout-btn {
+            background: #e50914;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .navbar .logout-btn:hover {
+            background: #b00610;
+        }
+
+        /* Main container */
+        .container {
+            display: flex;
+            justify-content: center;
+            margin: 30px;
+        }
+
+        /* Users Table */
+        .users-table {
+            width: 90%;
+            background-color: #1c1c1c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .users-table h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #e50914;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #222;
+            color: #e5e5e5;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #2a2a2a;
+        }
+
+        tr:nth-child(odd) td {
+            background-color: #1c1c1c;
+        }
+
+        td a {
+            color: #e50914;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        td a:hover {
+            color: #ff4747;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .users-table {
+                width: 100%;
+            }
+
+            table, th, td {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="welcome-text">Welcome, <?php echo $_SESSION['username']; ?></div>
+    <a class="logout-btn" href="logout.php">Logout</a>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Users Table -->
+    <div class="users-table">
+        <h3>All Users</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($users as $user): ?>
+                <tr>
+                    <td><?php echo $user['id']; ?></td>
+                    <td><?php echo $user['name']; ?></td>
+                    <td><?php echo $user['surname']; ?></td>
+                    <td><?php echo $user['username']; ?></td>
+                    <td><?php echo $user['email']; ?></td>
+                    <td>
+                        <a href="update.php?id=<?php echo $user['id']; ?>">Edit</a> |
+                        <a href="delete.php?id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
+
 
 <?php include 'footer.php'; ?>

@@ -1,5 +1,7 @@
 <?php
-$host = "localhost";
+   session_start();
+
+$server = "localhost";
 $dbname = "netflix_clone";
 $user = "root";
 $pass = "";
@@ -13,6 +15,4 @@ try {
     die("DB connection failed: " . $e->getMessage());
 }
 
-if(session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+?>

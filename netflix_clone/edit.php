@@ -1,22 +1,78 @@
-<?php include 'config.php'; include 'header.php'; ?>
 <?php
-if(!isset($_GET['id'])) die("Movie ID missing");
+include_once("config.php");
+
+// Check if form submitted
+if (isset($_POST['update'])) {
+    $id = $_POST['id'];
+    $title = trim($_POST['title']);
+    $genre = trim($_POST['genre']);
+    $year = trim($_POST['year']);
+    $description = trim($_POST['description']);
+    $thumbnail = trim($_POST['thumbnail']);
+
+    // Validation
+    if (empty($title) || empty($genre) || empty($year) || empty($description)) {
+        header("Location: edit.php?id=$id&error=empty_fields");
+        exit();
+    }
+
+    $sql = "UPDATE movies 
+            SET title=:title, genre=:genre, year=:year, description=:description, thumbnail=:thumbnail 
+            WHERE id=:id";
+
+    $prep = $pdo->prepare($sql);
+    $prep->bindParam(':id', $id);
+    $prep->bindParam(':title', $title);
+    $prep->bindParam(':genre', $genre);
+    $prep->bindParam(':year', $year);
+    $prep->bindParam(':description', $description);
+    $prep->bindParam(':thumbnail', $thumbnail);
+
+    $prep->execute();
+
+    // Redirect back to dashboard
+    header("Location: dashboard.php?success=movie_updated");
+    exit();
+}
+
+// If no POST, load movie for editing
+if (!isset($_GET['id'])) {
+    die("Movie ID missing");
+}
+
 $id = (int)$_GET['id'];
 $stmt = $pdo->prepare("SELECT * FROM movies WHERE id=?");
 $stmt->execute([$id]);
 $movie = $stmt->fetch();
-if(!$movie) die("Movie not found");
+
+if (!$movie) {
+    die("Movie not found");
+}
 ?>
 
+<?php include 'header.php'; ?>
+
 <h2>Edit Movie</h2>
-<form action="update.php" method="post">
-  <input type="hidden" name="id" value="<?= $movie['id'] ?>">
-  <label>Title: <input type="text" name="title" value="<?= htmlspecialchars($movie['title']) ?>"></label><br>
-  <label>Genre: <input type="text" name="genre" value="<?= htmlspecialchars($movie['genre']) ?>"></label><br>
-  <label>Year: <input type="number" name="year" value="<?= $movie['year'] ?>"></label><br>
-  <label>Description: <textarea name="description"><?= htmlspecialchars($movie['description']) ?></textarea></label><br>
-  <label>Thumbnail URL: <input type="text" name="thumbnail" value="<?= htmlspecialchars($movie['thumbnail']) ?>"></label><br>
-  <button type="submit">Update</button>
+
+<form action="edit.php" method="post">
+    <input type="hidden" name="id" value="<?= $movie['id'] ?>">
+    
+    <label>Title:</label>
+    <input type="text" name="title" value="<?= htmlspecialchars($movie['title']) ?>"><br>
+
+    <label>Genre:</label>
+    <input type="text" name="genre" value="<?= htmlspecialchars($movie['genre']) ?>"><br>
+
+    <label>Year:</label>
+    <input type="number" name="year" value="<?= htmlspecialchars($movie['year']) ?>"><br>
+
+    <label>Description:</label>
+    <textarea name="description"><?= htmlspecialchars($movie['description']) ?></textarea><br>
+
+    <label>Thumbnail URL:</label>
+    <input type="text" name="thumbnail" value="<?= htmlspecialchars($movie['thumbnail']) ?>"><br>
+
+    <button type="submit" name="update">Update</button>
 </form>
 
 <?php include 'footer.php'; ?>

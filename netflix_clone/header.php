@@ -20,4 +20,5 @@
     <?php endif; ?>
   </nav>
 </header>
-<main>
+    </body>
+    </html>
