@@ -46,7 +46,6 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
             color: #fff;
         }
 
-        /* Navbar */
         .navbar {
             background: #000;
             padding: 15px 30px;
@@ -75,14 +74,12 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
             background: #b00610;
         }
 
-        /* Main container */
         .container {
             display: flex;
             justify-content: center;
             margin: 30px;
         }
 
-        /* Users Table */
         .users-table {
             width: 90%;
             background-color: #1c1c1c;
@@ -134,7 +131,6 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
             color: #ff4747;
         }
 
-        /* Responsiveness */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -153,15 +149,12 @@ if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
 </head>
 <body>
 
-<!-- Navbar -->
 <div class="navbar">
     <div class="welcome-text">Welcome, <?php echo $_SESSION['username']; ?></div>
     <a class="logout-btn" href="logout.php">Logout</a>
 </div>
 
-<!-- Main Content -->
 <div class="container">
-    <!-- Users Table -->
     <div class="users-table">
         <h3>All Users</h3>
         <table>

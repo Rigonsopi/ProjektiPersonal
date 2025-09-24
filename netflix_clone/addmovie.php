@@ -2,26 +2,22 @@
 session_start();
 include 'config.php';
 
-// Ensure user is logged in
 if(empty($_SESSION['username'])) {
     header("Location: signin.php");
     exit();
 }
 
-// Handle form submission
 if(isset($_POST['submit'])) {
     $title = trim($_POST['title']);
     $genre = trim($_POST['genre']);
     $year = (int)$_POST['year'];
     $description = trim($_POST['description']);
 
-    // Handle file upload
     if(isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === 0) {
-        $uploadDir = 'uploads/'; // Make sure this folder exists
+        $uploadDir = 'uploads/'; 
         $fileName = time() . '_' . basename($_FILES['thumbnail']['name']);
         $targetFile = $uploadDir . $fileName;
 
-        // Optional: check file type
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if(!in_array($_FILES['thumbnail']['type'], $allowedTypes)) {
             die("Only JPG, PNG, GIF images are allowed.");
@@ -36,7 +32,6 @@ if(isset($_POST['submit'])) {
         die("No image uploaded.");
     }
 
-    // Save movie in database
     $stmt = $pdo->prepare("INSERT INTO movies (title, genre, year, description, thumbnail) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([$title, $genre, $year, $description, $thumbnail]);
 

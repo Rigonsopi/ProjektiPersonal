@@ -9,14 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Validate inputs
     if (empty($name) || empty($surname) || empty($username) || empty($email) || empty($password)) {
         echo "<div class='alert alert-danger text-center'>All fields are required!</div>";
         header("refresh:2; url=signup.php");
         exit();
     }
 
-    // Check if username already exists
     $checkSql = "SELECT username FROM users WHERE username = :username";
     $stmt = $pdo->prepare($checkSql);
     $stmt->bindParam(':username', $username);
@@ -28,10 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         exit();
     }
 
-    // Hash password
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert new user
     $insertSql = "INSERT INTO users (name, surname, username, email, password_hash, is_admin) 
                   VALUES (:name, :surname, :username, :email, :password, 0)";
     $insertStmt = $pdo->prepare($insertSql);

@@ -9,14 +9,12 @@ if (isset($_POST['submit'])) {
     $email = trim($_POST['email']);
     $tempPass = trim($_POST['password']);
 
-    // Validate inputs
     if (empty($name) || empty($surname) || empty($username) || empty($email) || empty($tempPass)) {
         echo "All fields are required!";
         header("refresh:2; url=register.php");
         exit();
     }
 
-    // Check if username exists
     $checkSql = "SELECT username FROM users WHERE username = :username";
     $stmt = $pdo->prepare($checkSql);
     $stmt->bindParam(':username', $username);
@@ -28,10 +26,8 @@ if (isset($_POST['submit'])) {
         exit();
     }
 
-    // Hash password
     $password = password_hash($tempPass, PASSWORD_DEFAULT);
 
-    // Insert new user
     $insertSql = "INSERT INTO users (name, surname, username, email, password_hash) 
                   VALUES (:name, :surname, :username, :email, :password)";
     $insertStmt = $pdo->prepare($insertSql);

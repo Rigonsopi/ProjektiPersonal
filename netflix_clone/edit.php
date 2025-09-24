@@ -1,7 +1,6 @@
 <?php
 include_once("config.php");
 
-// Check if form submitted
 if (isset($_POST['update'])) {
     $id = $_POST['id'];
     $title = trim($_POST['title']);
@@ -10,7 +9,6 @@ if (isset($_POST['update'])) {
     $description = trim($_POST['description']);
     $thumbnail = trim($_POST['thumbnail']);
 
-    // Validation
     if (empty($title) || empty($genre) || empty($year) || empty($description)) {
         header("Location: edit.php?id=$id&error=empty_fields");
         exit();
@@ -30,12 +28,10 @@ if (isset($_POST['update'])) {
 
     $prep->execute();
 
-    // Redirect back to dashboard
     header("Location: dashboard.php?success=movie_updated");
     exit();
 }
 
-// If no POST, load movie for editing
 if (!isset($_GET['id'])) {
     die("Movie ID missing");
 }

@@ -2,13 +2,11 @@
 session_start();
 include 'config.php';
 
-// Ensure the user is logged in
 if (empty($_SESSION['username'])) {
     header("Location: signin.php");
     exit();
 }
 
-// Check if POST data is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $id = $_POST['id'];
     $title = trim($_POST['title']);
@@ -17,14 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $description = trim($_POST['description']);
     $thumbnail = trim($_POST['thumbnail']);
 
-    // Validate required fields
     if (empty($title) || empty($genre) || empty($year) || empty($description) || empty($thumbnail)) {
         echo "<div class='alert alert-danger text-center'>All fields are required!</div>";
         header("refresh:2; url=dashboard.php");
         exit();
     }
 
-    // Update movie in database
     $sql = "UPDATE movies SET title=:title, genre=:genre, year=:year, description=:description, thumbnail=:thumbnail WHERE id=:id";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':title', $title);
@@ -39,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     exit();
 }
 
-// Fetch movie to prefill form
 if (!isset($_GET['id'])) {
     die("Movie ID not provided.");
 }
