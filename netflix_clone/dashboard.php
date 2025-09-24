@@ -1,4 +1,5 @@
 <?php include 'config.php'; include 'header.php'; ?>
+
 <?php
 require 'config.php'; 
 
@@ -21,9 +22,6 @@ if(isset($_POST['add_movie'])) {
     } else {
         echo "<p style='color:red'>Error adding movie!</p>";
     }
-}
-if(!isset($_SESSION['user']) || $_SESSION['user']['is_admin'] != 1) {
-    die("Access denied!");
 }
 ?>
 
