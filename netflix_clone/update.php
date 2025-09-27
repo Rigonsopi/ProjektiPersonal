@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'config.php';
+include ('config.php');
 
 if (empty($_SESSION['username'])) {
     header("Location: signin.php");

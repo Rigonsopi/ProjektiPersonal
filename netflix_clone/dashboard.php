@@ -1,28 +1,33 @@
-<?php include 'config.php'; include 'header.php'; ?>
-
 <?php
 require 'config.php'; 
+include 'header.php';
 
-if(isset($_POST['add_movie'])) {
+if (isset($_POST['add_movie'])) {
     $title = $_POST['title'];
     $genre = $_POST['genre'];
     $year = $_POST['year'];
     $description = $_POST['description'];
     $thumbnail = $_POST['thumbnail'];
 
-    $stmt = $pdo->prepare("INSERT INTO movies (title, genre, year, description, thumbnail) VALUES (:title, :genre, :year, :description, :thumbnail)");
+    $stmt = $pdo->prepare("INSERT INTO movies (title, genre, year, description, thumbnail) 
+                           VALUES (:title, :genre, :year, :description, :thumbnail)");
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':genre', $genre);
     $stmt->bindParam(':year', $year);
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':thumbnail', $thumbnail);
 
-    if($stmt->execute()) {
+    if ($stmt->execute()) {
         echo "<p style='color:green'>Movie added successfully!</p>";
     } else {
         echo "<p style='color:red'>Error adding movie!</p>";
     }
 }
+
+
+$stmt = $pdo->prepare("SELECT * FROM users");
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -148,7 +153,9 @@ if(isset($_POST['add_movie'])) {
 <body>
 
 <div class="navbar">
-    <div class="welcome-text">Welcome, <?php echo $_SESSION['username']; ?></div>
+    <div class="welcome-text">
+        Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Guest'); ?>
+    </div>
     <a class="logout-btn" href="logout.php">Logout</a>
 </div>
 
@@ -167,19 +174,23 @@ if(isset($_POST['add_movie'])) {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($users as $user): ?>
-                <tr>
-                    <td><?php echo $user['id']; ?></td>
-                    <td><?php echo $user['name']; ?></td>
-                    <td><?php echo $user['surname']; ?></td>
-                    <td><?php echo $user['username']; ?></td>
-                    <td><?php echo $user['email']; ?></td>
-                    <td>
-                        <a href="update.php?id=<?php echo $user['id']; ?>">Edit</a> |
-                        <a href="delete.php?id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                <?php if (!empty($users)): ?>
+                    <?php foreach ($users as $user): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($user['id']); ?></td>
+                            <td><?php echo htmlspecialchars($user['name']); ?></td>
+                            <td><?php echo htmlspecialchars($user['surname']); ?></td>
+                            <td><?php echo htmlspecialchars($user['username']); ?></td>
+                            <td><?php echo htmlspecialchars($user['email']); ?></td>
+                            <td>
+                                <a href="update.php?id=<?php echo $user['id']; ?>">Edit</a> |
+                                <a href="delete.php?id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="6">No users found.</td></tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -187,6 +198,5 @@ if(isset($_POST['add_movie'])) {
 
 </body>
 </html>
-
 
 <?php include 'footer.php'; ?>
