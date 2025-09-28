@@ -1,29 +1,33 @@
 <?php
-session_start();
 include 'config.php';
 
-if(empty($_SESSION['username'])) {
+if (empty($_SESSION['username'])) {
     header("Location: signin.php");
     exit();
 }
 
-if(isset($_POST['submit'])) {
+if (isset($_POST['submit'])) {
     $title = trim($_POST['title']);
     $genre = trim($_POST['genre']);
     $year = (int)$_POST['year'];
     $description = trim($_POST['description']);
 
-    if(isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === 0) {
-        $uploadDir = 'uploads/'; 
+    if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === 0) {
+        $uploadDir = 'uploads/';
+
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
         $fileName = time() . '_' . basename($_FILES['thumbnail']['name']);
         $targetFile = $uploadDir . $fileName;
 
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if(!in_array($_FILES['thumbnail']['type'], $allowedTypes)) {
+        if (!in_array($_FILES['thumbnail']['type'], $allowedTypes)) {
             die("Only JPG, PNG, GIF images are allowed.");
         }
 
-        if(move_uploaded_file($_FILES['thumbnail']['tmp_name'], $targetFile)) {
+        if (move_uploaded_file($_FILES['thumbnail']['tmp_name'], $targetFile)) {
             $thumbnail = $targetFile;
         } else {
             die("Failed to upload image.");
